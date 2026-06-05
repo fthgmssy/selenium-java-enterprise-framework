@@ -1,15 +1,16 @@
 # selenium-java-enterprise-framework
 
-Java tabanlı kurumsal Selenium test otomasyon framework'ü. Page Object Model, TestNG, Allure raporlama ve GitLab CI entegrasyonu içerir.
+Java tabanlı kurumsal Selenium test otomasyon framework'ü. Page Object Model pattern, TestNG, Allure raporlama ve GitLab CI entegrasyonu içerir. Fintech ve bankacılık projelerinde kullandığım yapıyı temel alarak oluşturuldu.
 
 ## Teknolojiler
 
 - Java 11
 - Selenium 4
-- TestNG
+- TestNG 7
 - Allure Reports
 - Maven
 - WebDriverManager
+- GitLab CI
 
 ## Kurulum
 
@@ -22,12 +23,10 @@ mvn clean install -DskipTests
 ## Çalıştırma
 
 ```bash
+# Tüm testleri çalıştır
 mvn test
-```
 
-Farklı tarayıcı veya ortamla çalıştırmak için:
-
-```bash
+# Farklı tarayıcı ve ortamla
 mvn test -Dbrowser=firefox -Dheadless=true -Dbase.url=https://staging.example.com
 ```
 
@@ -37,15 +36,33 @@ mvn test -Dbrowser=firefox -Dheadless=true -Dbase.url=https://staging.example.co
 mvn allure:serve
 ```
 
-## Yapı
+Testler tamamlandıktan sonra Allure raporu otomatik olarak tarayıcıda açılır.
+
+## Proje Yapısı
 
 ```
 src/
 ├── main/java/
-│   ├── base/          # BasePage
-│   ├── config/        # ConfigReader
-│   └── driver/        # DriverManager (ThreadLocal)
+│   ├── base/          # BasePage — tüm page object'ler buradan türer
+│   ├── config/        # ConfigReader — properties dosyasını okur
+│   ├── driver/        # DriverManager — ThreadLocal WebDriver
+│   └── pages/         # sayfa bazlı page object'ler
 └── test/java/
-    ├── base/          # BaseTest
+    ├── base/          # BaseTest — setUp/tearDown, screenshot
     └── tests/         # test suite'leri
 ```
+
+## Yapılandırma
+
+`src/main/resources/config.properties` dosyasından yönetilir:
+
+```properties
+browser=chrome
+headless=false
+base.url=https://example.com
+implicit.wait=10
+explicit.wait=15
+screenshot.on.failure=true
+```
+
+Tüm değerler `-D` parametresiyle komut satırından ezillebilir.
