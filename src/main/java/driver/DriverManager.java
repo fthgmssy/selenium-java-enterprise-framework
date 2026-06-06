@@ -15,21 +15,19 @@ public class DriverManager {
     public static void initDriver() {
         String browser = ConfigReader.getBrowser().toLowerCase();
         boolean headless = ConfigReader.isHeadless();
+        WebDriver webDriver;
 
-        WebDriver webDriver = switch (browser) {
-            case "firefox" -> {
-                WebDriverManager.firefoxdriver().setup();
-                FirefoxOptions options = new FirefoxOptions();
-                if (headless) options.addArguments("--headless");
-                yield new FirefoxDriver(options);
-            }
-            default -> {
-                WebDriverManager.chromedriver().setup();
-                ChromeOptions options = new ChromeOptions();
-                if (headless) options.addArguments("--headless", "--no-sandbox", "--disable-dev-shm-usage");
-                yield new ChromeDriver(options);
-            }
-        };
+        if (browser.equals("firefox")) {
+            WebDriverManager.firefoxdriver().setup();
+            FirefoxOptions options = new FirefoxOptions();
+            if (headless) options.addArguments("--headless");
+            webDriver = new FirefoxDriver(options);
+        } else {
+            WebDriverManager.chromedriver().setup();
+            ChromeOptions options = new ChromeOptions();
+            if (headless) options.addArguments("--headless", "--no-sandbox", "--disable-dev-shm-usage");
+            webDriver = new ChromeDriver(options);
+        }
 
         driver.set(webDriver);
     }

@@ -17,7 +17,7 @@ public class LoginTest extends BaseTest {
     @Severity(SeverityLevel.BLOCKER)
     public void validLoginShouldSucceed() {
         LoginPage loginPage = new LoginPage();
-        loginPage.login("test@example.com", "Test1234!");
+        loginPage.login("tomsmith", "SuperSecretPassword!");
         Assert.assertTrue(loginPage.isLoginSuccessful(), "Giriş başarısız oldu");
     }
 
@@ -26,38 +26,16 @@ public class LoginTest extends BaseTest {
     @Severity(SeverityLevel.CRITICAL)
     public void invalidPasswordShouldShowError() {
         LoginPage loginPage = new LoginPage();
-        loginPage.login("test@example.com", "yanlis_sifre");
+        loginPage.login("tomsmith", "yanlis_sifre");
         Assert.assertTrue(loginPage.isErrorDisplayed(), "Hata mesajı görüntülenmedi");
-        Assert.assertEquals(loginPage.getErrorMessage(), "E-posta veya şifre hatalı.");
     }
 
     @Test
-    @Description("Boş alanlarla giriş denemesi hata göstermeli")
+    @Description("Geçersiz kullanıcı adı ile giriş denemesi")
     @Severity(SeverityLevel.NORMAL)
-    public void emptyFieldsShouldShowError() {
+    public void invalidUsernameShouldShowError() {
         LoginPage loginPage = new LoginPage();
-        loginPage.login("", "");
+        loginPage.login("gecersiz_kullanici", "SuperSecretPassword!");
         Assert.assertTrue(loginPage.isErrorDisplayed(), "Hata mesajı görüntülenmedi");
-    }
-
-    @Test
-    @Description("Geçersiz e-posta formatı ile giriş denemesi")
-    @Severity(SeverityLevel.MINOR)
-    public void invalidEmailFormatShouldShowError() {
-        LoginPage loginPage = new LoginPage();
-        loginPage.login("gecersiz-email", "Test1234!");
-        Assert.assertTrue(loginPage.isErrorDisplayed(), "Hata mesajı görüntülenmedi");
-    }
-
-    @Test
-    @Description("3 başarısız denemeden sonra hesap kilitlenmeli")
-    @Severity(SeverityLevel.CRITICAL)
-    public void accountShouldLockAfterThreeFailedAttempts() {
-        LoginPage loginPage = new LoginPage();
-        for (int i = 0; i < 3; i++) {
-            loginPage.login("test@example.com", "yanlis_sifre_" + i);
-        }
-        Assert.assertTrue(loginPage.getErrorMessage().contains("hesabınız kilitlendi"),
-                "Hesap kilitleme mesajı görüntülenmedi");
     }
 }

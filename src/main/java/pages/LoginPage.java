@@ -6,31 +6,31 @@ import org.openqa.selenium.By;
 
 public class LoginPage extends BasePage {
 
-    private final By emailInput    = By.id("email");
+    private final By usernameInput = By.id("username");
     private final By passwordInput = By.id("password");
     private final By loginButton   = By.cssSelector("button[type='submit']");
-    private final By errorMessage  = By.cssSelector(".error-message");
-    private final By welcomeText   = By.cssSelector(".dashboard-welcome");
+    private final By errorMessage  = By.id("flash");
+    private final By successMessage = By.id("flash");
 
-    @Step("E-posta ve şifre ile giriş yapılıyor: {email}")
-    public LoginPage login(String email, String password) {
-        type(emailInput, email);
+    @Step("Kullanıcı adı ve şifre ile giriş yapılıyor: {username}")
+    public LoginPage login(String username, String password) {
+        type(usernameInput, username);
         type(passwordInput, password);
         click(loginButton);
         return this;
     }
 
-    @Step("Hata mesajı alınıyor")
-    public String getErrorMessage() {
-        return getText(errorMessage);
+    @Step("Mesaj alınıyor")
+    public String getFlashMessage() {
+        return getText(successMessage);
     }
 
     @Step("Giriş başarılı mı kontrol ediliyor")
     public boolean isLoginSuccessful() {
-        return isDisplayed(welcomeText);
+        return getCurrentUrl().contains("/secure");
     }
 
     public boolean isErrorDisplayed() {
-        return isDisplayed(errorMessage);
+        return isDisplayed(errorMessage) && getFlashMessage().contains("invalid");
     }
 }
